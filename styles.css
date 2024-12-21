@@ -1,0 +1,10 @@
+body {
+  background-color: #080808;
+}
+
+#matrix {
+  display: block;
+  margin: auto;
+  width: 20%;
+  height: 40%
+}
