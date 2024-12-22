@@ -1,43 +1,78 @@
-const rows: number = 40, cols: number = 10
+const rows: number = 40,
+  cols: number = 10;
 
-// Type assertion here since ts lsp doesn't correctly read these lines
-const c = document.getElementById("matrix") as HTMLCanvasElement
-const ctx = c.getContext("2d") as CanvasRenderingContext2D
+// Type assertion here since lsp doesn't correctly read these lines
+const c = document.getElementById("matrix") as HTMLCanvasElement;
+const ctx = c.getContext("2d") as CanvasRenderingContext2D;
 
-let matrix: number[][] = Array(rows).fill(Array(cols).fill(0))
+let matrix: number[][] = Array(rows).fill(Array(cols).fill(0));
+
+function randomGenerator() {
+  // Fisher-Yates shuffle algorithm will generate a randomly shuffled set of blocks
+  const blocks: number[] = [1, 2, 3, 4, 5, 6, 7];
+  let currentIndex = blocks.length;
+
+  while (currentIndex > 0) {
+    let randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    [blocks[currentIndex], blocks[randomIndex]] = [
+      blocks[randomIndex],
+      blocks[currentIndex],
+    ];
+  }
+
+  return blocks;
+}
 
 function setColor(block: number, ctx: CanvasRenderingContext2D) {
   if (block === 0) {
-    ctx.fillStyle = "block"
+    ctx.fillStyle = "block";
   } else if (block === 1) {
-    ctx.fillStyle = "cyan"
+    ctx.fillStyle = "cyan";
   } else if (block === 2) {
-    ctx.fillStyle = "blue"
+    ctx.fillStyle = "blue";
   } else if (block === 3) {
-    ctx.fillStyle = "orange"
+    ctx.fillStyle = "orange";
   } else if (block === 4) {
-    ctx.fillStyle = "yellow"
+    ctx.fillStyle = "yellow";
   } else if (block === 5) {
-    ctx.fillStyle = "lime"
+    ctx.fillStyle = "lime";
   } else if (block === 6) {
-    ctx.fillStyle = "red"
+    ctx.fillStyle = "red";
   } else if (block === 7) {
-    ctx.fillStyle = "purple"
+    ctx.fillStyle = "purple";
   } else {
-    block = 0
-    ctx.fillStyle = "block"
+    // Reset to default state if number falls outside of range
+    block = 0;
+    ctx.fillStyle = "block";
   }
 }
 
 function draw() {
-  const offset: number = 21, spacing: number = 20
-  for (let row = offset; row < rows; row++) {
+  const skyline: number = 18,
+    spacing: number = 10,
+    halfSpacing: number = 5;
+  for (let row = skyline; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
-      setColor(matrix[row][col], ctx)
-      ctx.fillRect(col * spacing, (row - offset) * spacing, spacing, spacing)
+      if (row === skyline) {
+        // Row is the half-line between the skyline and bufferzone
+        // Therefore the tiles should only be half the height
+        setColor(matrix[row][col], ctx);
+        ctx.fillRect(col * spacing, 0, spacing, halfSpacing);
+      } else {
+        // Normal matrix rows, should have full spacing
+        setColor(matrix[row][col], ctx);
+        ctx.fillRect(
+          col * spacing,
+          (row - skyline - 1) * spacing + halfSpacing,
+          spacing,
+          spacing,
+        );
+      }
     }
   }
-  ctx.fill()
+  ctx.fill();
 }
 
-draw()
+draw();

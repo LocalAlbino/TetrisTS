@@ -5,6 +5,7 @@ body {
 #matrix {
   display: block;
   margin: auto;
+  margin-top: 2rem;
   width: 20%;
   height: 40%
 }

@@ -1,9 +1,20 @@
 "use strict";
 const rows = 40, cols = 10;
-// Type assertion here since ts lsp doesn't correctly read these lines
+// Type assertion here since lsp doesn't correctly read these lines
 const c = document.getElementById("matrix");
 const ctx = c.getContext("2d");
 let matrix = Array(rows).fill(Array(cols).fill(0));
+function randomGenerator() {
+    // Fisher-Yates shuffle algorithm will generate a randomly shuffled set of blocks
+    const blocks = [1, 2, 3, 4, 5, 6, 7];
+    let currentIndex = blocks.length;
+    while (currentIndex > 0) {
+        let randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        [blocks[currentIndex], blocks[randomIndex]] = [blocks[randomIndex], blocks[currentIndex]];
+    }
+    return blocks;
+}
 function setColor(block, ctx) {
     if (block === 0) {
         ctx.fillStyle = "block";
@@ -30,16 +41,26 @@ function setColor(block, ctx) {
         ctx.fillStyle = "purple";
     }
     else {
+        // Reset to default state if number falls outside of range
         block = 0;
         ctx.fillStyle = "block";
     }
 }
 function draw() {
-    const offset = 21, spacing = 20;
-    for (let row = offset; row < rows; row++) {
+    const skyline = 18, spacing = 10, halfSpacing = 5;
+    for (let row = skyline; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
-            setColor(matrix[row][col], ctx);
-            ctx.fillRect(col * spacing, (row - offset) * spacing, spacing, spacing);
+            if (row === skyline) {
+                // Row is the half-line between the skyline and bufferzone
+                // Therefore the tiles should only be half the height
+                setColor(matrix[row][col], ctx);
+                ctx.fillRect(col * spacing, 0, spacing, halfSpacing);
+            }
+            else {
+                // Normal matrix rows, should have full spacing
+                setColor(matrix[row][col], ctx);
+                ctx.fillRect(col * spacing, ((row - skyline - 1) * spacing) + halfSpacing, spacing, spacing);
+            }
         }
     }
     ctx.fill();
