@@ -1,15 +1,18 @@
-const rows: number = 40,
-  cols: number = 10;
+import "./block.ts";
+import { BlockType, getBlock, Piece } from "./block.ts";
 
-// Type assertion here since lsp doesn't correctly read these lines
+const rows = 40,
+  cols = 10;
+
+// Type assertion here since these elements always should exist
 const c = document.getElementById("matrix") as HTMLCanvasElement;
 const ctx = c.getContext("2d") as CanvasRenderingContext2D;
 
-let matrix: number[][] = Array(rows).fill(Array(cols).fill(0));
+let matrix = Array(rows).fill(Array(cols).fill(0));
 
 function randomGenerator() {
   // Fisher-Yates shuffle algorithm will generate a randomly shuffled set of blocks
-  const blocks: number[] = [1, 2, 3, 4, 5, 6, 7];
+  const blocks = [1, 2, 3, 4, 5, 6, 7];
   let currentIndex = blocks.length;
 
   while (currentIndex > 0) {
@@ -50,9 +53,9 @@ function setColor(block: number, ctx: CanvasRenderingContext2D) {
 }
 
 function draw() {
-  const skyline: number = 18,
-    spacing: number = 10,
-    halfSpacing: number = 5;
+  const skyline = 18,
+    spacing = 10,
+    halfSpacing = 5;
   for (let row = skyline; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
       if (row === skyline) {

@@ -1,6 +1,8 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+require("./block.ts");
 const rows = 40, cols = 10;
-// Type assertion here since lsp doesn't correctly read these lines
+// Type assertion here since these elements always should exist
 const c = document.getElementById("matrix");
 const ctx = c.getContext("2d");
 let matrix = Array(rows).fill(Array(cols).fill(0));
@@ -11,7 +13,10 @@ function randomGenerator() {
     while (currentIndex > 0) {
         let randomIndex = Math.floor(Math.random() * currentIndex);
         currentIndex--;
-        [blocks[currentIndex], blocks[randomIndex]] = [blocks[randomIndex], blocks[currentIndex]];
+        [blocks[currentIndex], blocks[randomIndex]] = [
+            blocks[randomIndex],
+            blocks[currentIndex],
+        ];
     }
     return blocks;
 }
@@ -59,7 +64,7 @@ function draw() {
             else {
                 // Normal matrix rows, should have full spacing
                 setColor(matrix[row][col], ctx);
-                ctx.fillRect(col * spacing, ((row - skyline - 1) * spacing) + halfSpacing, spacing, spacing);
+                ctx.fillRect(col * spacing, (row - skyline - 1) * spacing + halfSpacing, spacing, spacing);
             }
         }
     }
