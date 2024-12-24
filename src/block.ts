@@ -233,6 +233,8 @@ function isLegalSpace(blockPosition: Position[]) {
 }
 
 // Rotate blocks clockwise
+// Refer to the Tetris Guideline for a chart defining rotations
+// Super rotation system not implemented now but may be later
 
 function rotateIClockwise(block: Piece, matrix: number[][]) {
   if (block.type != "IBlock") {
